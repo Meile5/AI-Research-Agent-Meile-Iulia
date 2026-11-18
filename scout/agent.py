@@ -31,28 +31,28 @@ def parse_pick(text: str) -> Pick:
 class Deps:
     """State for one run, shared between the tool and the validator."""
     seen: dict[str, Paper] = field(default_factory=dict)
-    constraints: Constraints | None = None
-    searches: int = 0
+    constraints: Constraints | None = None  
+    searches: int = 0 
 
 
 agent = Agent(
     deps_type=Deps,
-
     output_type=[ToolOutput(Pick, name="Pick"), TextOutput(parse_pick)],
     system_prompt=SYSTEM_PROMPT,
-    retries=2,
+    retries=2,  
 )
 
 
 @agent.tool
-def search_papers(ctx: RunContext[Deps], constraints: Constraints) -> list[dict]:
+def search_papers(ctx: RunContext[Deps], constraints: Constraints) -> list[dict] | str:
     """Search OpenAlex for papers. Returns only papers that already satisfy the constraints."""
     papers = openalex.search_papers(constraints)
     ctx.deps.constraints = constraints
     ctx.deps.searches += 1
+    if not papers:  
+        return "No papers match these constraints. Answer with found=false and explain why."
     for p in papers:
         ctx.deps.seen[p.id] = p
-    # Compact view for the LLM, to keep tokens low
     return [{"id": p.id, "title": p.title, "year": p.year, "citations": p.citations,
              "abstract": p.abstract[:400]} for p in papers]
 
@@ -63,7 +63,7 @@ def check_pick(ctx: RunContext[Deps], pick: Pick) -> Pick:
     if ctx.deps.constraints is None:
         raise ModelRetry("You must call search_papers before answering.")
     if not pick.found:
-        return pick 
+        return pick  
     paper = ctx.deps.seen.get(pick.paper_id)
     if paper is None:
         raise ModelRetry(f"Paper id {pick.paper_id!r} was not returned by search_papers. Pick one of those ids.")

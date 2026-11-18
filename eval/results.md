@@ -2,15 +2,15 @@
 
 | # | Category | Found as expected | Year ok | Citations ok | Valid source | No hallucination | Relevant | Useful explanation | Tool calls | Answer |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 1 | broad-topic | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 2 | narrow-topic+no-constraints | yes | yes | yes | yes | yes | ? | ? | 1 | Generation-Augmented Retrieval for Open-Domain Question Answering (2021, 393 cit.): The paper focuses on generation-augmented retrieval for open-domain question answering, which aligns with the request for retrieval-augmented generation applied to QA. |
-| 3 | before-year | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 4 | after-year | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 5 | exact-year | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 6 | min-citations | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 7 | max-citations | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 8 | after-year+min-citations | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 9 | no-good-paper | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 10 | no-good-paper | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 11 | ambiguous | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
-| 12 | ambiguous | ERROR: ModelRequestRejectedError | | | | | ? | ? | | |
+| 1 | broad-topic | yes | yes | yes | yes | yes | ? | ? | 1 | Deep learning (2015, 108784 cit.): The paper titled "Deep learning" (2015) is a seminal work that introduced deep learning concepts to a broad audience and has accumulated well over the required citation threshold, making it a highly cited reference in the field. |
+| 2 | narrow-topic+no-constraints | yes | yes | yes | yes | yes | ? | ? | 1 | Generation-Augmented Retrieval for Open-Domain Question Answering (2021, 393 cit.): The paper focuses on a method that combines retrieval and generation to improve open-domain question answering, directly matching the requested topic of retrieval-augmented generation for QA. |
+| 3 | before-year | yes | yes | yes | yes | yes | ? | ? | 1 | Support vector machines (1998, 8454 cit.): The paper is directly about support vector machines and its publication year is 1998, which satisfies the requirement of being before 2000. |
+| 4 | after-year | yes | yes | yes | yes | yes | ? | ? | 1 | Comprehensive exploration of diffusion models in image generation: a survey (2025, 147 cit.): The paper is a comprehensive survey of diffusion models applied to image generation, published after 2021, directly matching the requested topic and time frame. |
+| 5 | exact-year | NO | n/a | n/a | n/a | n/a | ? | ? | 1 | The search for papers on "transformer architecture" from 2017 returned only works on electrical power transformers and related engineering topics. None of the returned papers discuss the neural‑network Transformer architecture introduced in 2017, so no suitable paper was found. |
+| 6 | min-citations | yes | yes | yes | yes | yes | ? | ? | 1 | Reinforcement learning in robotics: A survey (2013, 4313 cit.): The paper is a comprehensive survey of reinforcement learning applied to robotics, directly matching the requested topic, and it has well over the required 500 citations. |
+| 7 | max-citations | yes | yes | yes | yes | yes | ? | ? | 1 | Federated Learning: Healthcare, Security, Challenges, and Threats (2023, 2 cit.): The 2023 paper "Federated Learning: Healthcare, Security, Challenges, and Threats" has only a few citations, fitting the at‑most‑50 requirement and focuses on federated learning in healthcare, making it a suitable lesser‑known choice. |
+| 8 | after-year+min-citations | yes | yes | yes | yes | yes | ? | ? | 1 | Large Language Model Agent: A Survey on Methodology, Applications and Challenges (2025, 510 cit.): The paper titled 'Large Language Model Agent: A Survey on Methodology, Applications and Challenges' (2025) directly addresses large language model agents, was published after 2022, and has well over 100 citations, satisfying all the requested constraints. |
+| 9 | no-good-paper | yes | n/a | n/a | n/a | n/a | ? | ? | 1 | No paper in the database matches all of the requested criteria. The search for works specifically about "ChatGPT" that were published before 2015 and have at least 500 citations returned only unrelated titles, indicating that such a paper does not exist. |
+| 10 | no-good-paper | yes | n/a | n/a | n/a | n/a | ? | ? | 1 | No papers match the constraints: a quantum computing paper published in 2025 with at least 1,000,000 citations does not exist in the database. |
+| 11 | ambiguous | yes | yes | yes | yes | yes | ? | ? | 1 | A-Mem: Agentic Memory for LLM Agents (2025, 1502 cit.): This paper was published after 2019, satisfying the interpretation of “recent.” Its title and abstract focus on agentic memory for large‑language‑model agents, directly matching the request for a recent paper about agents. |
+| 12 | ambiguous | yes | yes | yes | yes | yes | ? | ? | 1 | Research Design in Social Research (2001, 2435 cit.): I selected the paper titled “Research Design in Social Research” because it is the most highly cited among the results, indicating it has attracted a large amount of scholarly attention, which matches your request for a paper with lots of citations. |

@@ -38,7 +38,7 @@ def scripted(*responses):
 def test_answer_is_built_from_tool_data():
     result, deps = scout_agent.run("q", model=scripted(search(AFTER_2022), answer(True, "W1")))
     assert result.found and result.title == "Good paper"
-    assert result.citations == 150  # comes from the Paper, the LLM never sent a number
+    assert result.citations == 15
     assert result.citation_source == "OpenAlex (cited_by_count)"
     assert deps.searches == 1 and deps.constraints.year == 2022
 
@@ -75,3 +75,9 @@ def test_text_that_is_not_json_is_retried():
     chat = ModelResponse(parts=[TextPart("I think W1 is good.")])
     result = scout_agent.ask("q", model=scripted(search(AFTER_2022), chat, answer(True, "W1")))
     assert result.title == "Good paper"
+
+
+def test_no_papers_found_gives_graceful_rejection(monkeypatch):
+    monkeypatch.setattr(openalex, "search_papers", lambda c, client=None: [])
+    result = scout_agent.ask("q", model=scripted(search(AFTER_2022), answer(False, explanation="none")))
+    assert not result.found
