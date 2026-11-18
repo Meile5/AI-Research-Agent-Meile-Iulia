@@ -17,7 +17,8 @@ def show(a: ResearchAnswer) -> None:
         print(f"Why: {a.explanation}")
         return
     print(f"Title:     {a.title}")
-    print(f"Authors:   {', '.join(a.authors) or 'unknown'}")
+    authors = ", ".join(a.authors[:5]) + (" et al." if len(a.authors) > 5 else "")  # keep the output short
+    print(f"Authors:   {authors or 'unknown'}")
     print(f"Year:      {a.year}")
     print(f"Citations: {a.citations} (source: {a.citation_source})")
     print(f"Link:      {a.link}")
