@@ -3,10 +3,14 @@ import os
 
 from dotenv import load_dotenv
 from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.profiles.openai import OpenAIModelProfile
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_ai.settings import ModelSettings
 
-load_dotenv()  
+load_dotenv()
+
+OPENALEX_API_KEY = os.getenv("OPENALEX_API_KEY") or None
+
 
 def build_model() -> OpenAIChatModel:
     """Build the LLM. Called only when we really talk to Groq, so tests work without a key."""
@@ -21,5 +25,7 @@ def build_model() -> OpenAIChatModel:
     return OpenAIChatModel(
         os.getenv("LLM_MODEL", "openai/gpt-oss-120b"),
         provider=provider,
-        settings=ModelSettings(max_tokens=800, temperature=0),  
+        # Groq refuses JSON mode together with tools, so PromptedOutput must not turn it on
+        profile=OpenAIModelProfile(supports_json_object_output=False),
+        settings=ModelSettings(max_tokens=800, temperature=0),
     )

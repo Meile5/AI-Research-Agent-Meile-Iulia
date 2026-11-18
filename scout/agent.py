@@ -1,7 +1,7 @@
 ﻿"""The Research Scout agent: the LLM parses the request and picks a paper, code checks everything."""
 from dataclasses import dataclass, field
 
-from pydantic_ai import Agent, ModelRetry, PromptedOutput, RunContext
+from pydantic_ai import Agent, ModelRetry, RunContext, TextOutput, ToolOutput
 from pydantic_ai.usage import UsageLimits
 
 from scout import openalex
@@ -19,19 +19,28 @@ Rules:
 5. If the request is vague (e.g. "recent", "lots of citations"), say how you interpreted it."""
 
 
+def parse_pick(text: str) -> Pick:
+    """Used when the model writes its answer as JSON text instead of calling the Pick tool."""
+    try:
+        return Pick.model_validate_json(text)
+    except ValueError:
+        raise ModelRetry("Answer with the Pick tool, or with only a JSON object for Pick.")
+
+
 @dataclass
 class Deps:
     """State for one run, shared between the tool and the validator."""
-    seen: dict[str, Paper] = field(default_factory=dict)  
-    constraints: Constraints | None = None  
-    searches: int = 0  
+    seen: dict[str, Paper] = field(default_factory=dict)
+    constraints: Constraints | None = None
+    searches: int = 0
 
 
 agent = Agent(
     deps_type=Deps,
-    output_type=PromptedOutput(Pick),  
+
+    output_type=[ToolOutput(Pick, name="Pick"), TextOutput(parse_pick)],
     system_prompt=SYSTEM_PROMPT,
-    retries=2,  
+    retries=2,
 )
 
 
@@ -43,6 +52,7 @@ def search_papers(ctx: RunContext[Deps], constraints: Constraints) -> list[dict]
     ctx.deps.searches += 1
     for p in papers:
         ctx.deps.seen[p.id] = p
+    # Compact view for the LLM, to keep tokens low
     return [{"id": p.id, "title": p.title, "year": p.year, "citations": p.citations,
              "abstract": p.abstract[:400]} for p in papers]
 
@@ -53,7 +63,7 @@ def check_pick(ctx: RunContext[Deps], pick: Pick) -> Pick:
     if ctx.deps.constraints is None:
         raise ModelRetry("You must call search_papers before answering.")
     if not pick.found:
-        return pick  
+        return pick 
     paper = ctx.deps.seen.get(pick.paper_id)
     if paper is None:
         raise ModelRetry(f"Paper id {pick.paper_id!r} was not returned by search_papers. Pick one of those ids.")
