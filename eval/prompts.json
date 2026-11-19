@@ -22,5 +22,7 @@
   {"id": 11, "category": "ambiguous", "prompt": "Find me a recent paper about agents.",
     "expected": {"should_find": true, "year_op": null, "year": null, "cite_op": null, "cites": null}},
   {"id": 12, "category": "ambiguous", "prompt": "Find me a good paper with lots of citations.",
+    "expected": {"should_find": true, "year_op": null, "year": null, "cite_op": null, "cites": null}},
+  {"id": 13, "category": "year-range (limitation)", "prompt": "Find a paper about graph neural networks published between 2018 and 2020.",
     "expected": {"should_find": true, "year_op": null, "year": null, "cite_op": null, "cites": null}}
 ]
